@@ -41,6 +41,7 @@ int TerrainMap::getCost(const int x, const int y) {
 	if (it != costing.end()){
 		return it->second;
 	}
+	return 0;
 }
 
 char TerrainMap::operator()(const char x, const int y) const {
