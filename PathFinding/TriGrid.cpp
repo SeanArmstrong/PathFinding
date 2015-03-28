@@ -9,8 +9,6 @@ TriGrid::TriGrid(){
 			nodes[x][y].setNeighbours(nodes, 21, 8);
 		}
 	}
-	std::cout << nodes[0][0].getCost() << std::endl;
-	FindShortestPath('a', 0, 'e', 0);
 }
 
 
@@ -39,32 +37,82 @@ void TriGrid::FindShortestPath(char startNodeXLetter, int startNodeY, char goalN
 	}
 
 	if (startNode && goalNode && startNode != goalNode){
+		std::cout << "Start" << std::endl;
+		bool pathFound = false;
 		startNode->setG(0);
 		startNode->setH(goalNodeX, goalNodeY);
 		startNode->calculateF();
 		openList.insert(startNode);
 		TriNode* currentNode = startNode;
 
-		while (currentNode != goalNode || openList.size == 0){
-			
-			for (int i = 0; i < 4; i++){
-				TriNode* comparisonNode = currentNode->getNeighbours[i];
-				if (comparisonNode){
-					comparisonNode->setG(currentNode->getG() + comparisonNode->getCost());
-					comparisonNode->setH(goalNodeX, goalNodeY);
-					comparisonNode->calculateF();
-					// got to 6C need to add parent to TriNode and check lists using contains perhaps?
-				}
+		std::multiset<TriNode*>::iterator openListIt;
+		std::list<TriNode*>::iterator closedListIt;
+
+		while (openList.size() > 0){
+			std::cout << openList.size() << std::endl;
+			currentNode = *(openList.begin()); // Set current node to lowest f
+			openList.erase(openList.begin()); // Pop from openlist
+			closedList.push_front(currentNode);
+
+			if (currentNode == goalNode){
+				std::cout << "YAY" << std::endl;
+				pathFound = true;
+				closedList.push_front(currentNode);
+				break;
 			}
 
-			currentNode = *(openList.begin);
+			std::vector<TriNode*> neighbours = currentNode->getNeighbours();
+			std::cout << "Current Node: " << currentNode->getId() << "- number of neighbours" << neighbours.size() << std::endl;
+			for (int i = 0; i < neighbours.size(); i++){
+				std::cout << "Current Node: " << currentNode->getId() << "- Neighbour " << i << "  Neighbour ID: " << neighbours[i]->getId() << " Cost: " << neighbours[i]->getCost() << std::endl;
+				int newGValue = 0;
+
+				TriNode* comparisonNode = neighbours[i];
+				if (comparisonNode){
+					if (comparisonNode->getCost() < 0){ // we have a mountain to climb
+						std::cout << "Can't climb a mountain" << std::endl;
+						continue;
+					}
+
+					newGValue = currentNode->getG() + comparisonNode->getCost();
+					comparisonNode->setH(goalNodeX, goalNodeY);
+					comparisonNode->calculateF();
+
+					openListIt = openList.find(comparisonNode);
+					closedListIt = std::find(closedList.begin(), closedList.end(), comparisonNode);
+					if (openListIt != openList.end() || closedListIt != closedList.end()){ // on the open or closed list
+						if (newGValue < comparisonNode->getG()){
+							comparisonNode->setG(newGValue);
+							comparisonNode->calculateF();
+							comparisonNode->setParent(currentNode);
+						}
+					}
+					else{
+						comparisonNode->setG(newGValue);
+						comparisonNode->calculateF();
+						comparisonNode->setParent(currentNode);
+						openList.insert(comparisonNode);
+					}
+				}
+			}
 		}
 
-		if (openList.size > 0){
+		if (pathFound == true){
+			std::cout << "WOO" << std::endl;
 
+			// Print path
+			TriNode* printingNode = closedList.front();
+			std::cout << "Goal Node: " << printingNode->getId() << " x: " << printingNode->getX() <<
+				", y: " << printingNode->getY() << std::endl;
+
+			while (printingNode->hasParent()){
+				printingNode = printingNode->getParent();
+				std::cout << "Next Node: " << printingNode->getId() << " x: " << printingNode->getX() <<
+					", y: " << printingNode->getY() << std::endl;
+			}
 		}
 		else{
-			std::cout << "not Path found";
+			std::cout << "DOH!" << std::endl;
 		}
 	}
 

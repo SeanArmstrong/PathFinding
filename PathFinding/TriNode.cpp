@@ -16,6 +16,7 @@ TriNode::TriNode(const int x, const int y, const int up, const int down, const i
 	this->terrainMap = tm;
 	this->id = ID++;
 	this->numberOfConnectedNodes = up + down + left + right;
+	this->hasAParent = false;
 }
 
 
@@ -28,11 +29,16 @@ void TriNode::setG(int g){
 }
 
 void TriNode::setH(int goalX, int goalY){
-	abs(this->x - goalX) + abs(this->y + goalY);
+	this->h = abs(this->x - goalX) + abs(this->y + goalY);
 }
 
 void TriNode::calculateF(){
-	f = g + h;
+	this->f = this->g + this->h;
+}
+
+void TriNode::setParent(TriNode* p){
+	this->parent = p;
+	this->hasAParent = true;
 }
 
 bool TriNode::operator<(const TriNode rhs){
@@ -40,53 +46,27 @@ bool TriNode::operator<(const TriNode rhs){
 }
 
 void TriNode::setNeighbours(TriNode nodes[][8], const int xsize, const int ysize){
-	// This could be MUCH more Efficent but will do for now.
-	// This code disgust me and i wrote it
+
+	//std::cout << this->id << std::endl;
+
 	if (up == 1){
-		for (int y = 0; y < ysize; y++){
-			for (int x = 0; x < xsize; x++){
-				if ((nodes[x][y].y == (this->y + 1)) && (nodes[x][y].x == this->x)){
-					connectedIds[0] = nodes[x][y].id;
-					connectedObjects[0] = &(nodes[x][y]);
-					break;
-				}
-			}
-		}
+		//std::cout << "UP" << std::endl;
+		connectedObjects.push_back(&(nodes[this->x][this->y - 1]));
 	}
 
 	if (down == 1){
-		for (int y = 0; y < ysize; y++){
-			for (int x = 0; x < xsize; x++){
-				if ((nodes[x][y].y == (this->y - 1)) && (nodes[x][y].x == this->x)){
-					connectedIds[1] = nodes[x][y].id;
-					connectedObjects[1] = &(nodes[x][y]);
-					break;
-				}
-			}
-		}
+		//std::cout << "DOWN" << std::endl;
+		std::cout << (nodes[this->x][this->y - 1]).getId() << std::endl;
+		connectedObjects.push_back(&(nodes[this->x][this->y + 1]));
 	}
 
 	if (left == 1){
-		for (int y = 0; y < ysize; y++){
-			for (int x = 0; x < xsize; x++){
-				if ((nodes[x][y].x == (this->x - 1)) && (nodes[x][y].y == this->y)){
-					connectedIds[2] = nodes[x][y].id;
-					connectedObjects[2] = &(nodes[x][y]);
-					break;
-				}
-			}
-		}
+		//std::cout << "LEFT" << std::endl;
+		connectedObjects.push_back(&(nodes[this->x - 1][this->y]));
 	}
 
-	if (right = 1){
-		for (int y = 0; y < ysize; y++){
-			for (int x = 0; x < xsize; x++){
-				if ((nodes[x][y].x == (this->x + 1)) && (nodes[x][y].y == this->y)){
-					connectedIds[3] = nodes[x][y].id;
-					connectedObjects[3] = &(nodes[x][y]);
-					break;
-				}
-			}
-		}
+	if (right == 1){
+		//std::cout << "RIGHT" << std::endl;
+		connectedObjects.push_back(&(nodes[this->x + 1][this->y]));
 	}
 }

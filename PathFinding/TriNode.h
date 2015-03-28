@@ -1,5 +1,6 @@
 #pragma once
 #include "TerrainMap.h"
+#include <vector>
 
 class TriNode
 {
@@ -19,11 +20,17 @@ public:
 	inline int getG() const { return g; }
 	inline int getH() const { return h; }
 	inline int getF() const { return f; }
-	inline TriNode* getNeighbours() const { return *connectedObjects; }
+	inline int getId() const { return id; }
+	inline bool hasParent() const { return hasAParent; }
+	inline TriNode* getParent() const { return parent; }
+	//inline TriNode* getNeighbours() const { return *connectedObjects; }
+	inline std::vector<TriNode*> getNeighbours() const { return connectedObjects; }
 
 	void setG(int g);
 	void setH(int goalX, int goalY);
 	void calculateF();
+
+	void setParent(TriNode* p);
 
 	bool operator<(const TriNode rhs);
 
@@ -32,7 +39,8 @@ private:
 	int id;
 
 	int connectedIds[4];
-	TriNode* connectedObjects[4];
+	//TriNode* connectedObjects[4];
+	std::vector<TriNode*> connectedObjects;
 
 	int x;
 	int y;
@@ -49,5 +57,8 @@ private:
 	int g; // cost taken to reach node
 	int h; // best guess min to goal - manhatten
 	int f;
+
+	TriNode* parent;
+	bool hasAParent;
 };
 

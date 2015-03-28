@@ -11,6 +11,8 @@ int main(){
 
 	TriGrid grid;
 
+	grid.FindShortestPath('a', 1, 'e', 5);
+
 	char exit;
 	std::cin >> exit;
 	return 0;

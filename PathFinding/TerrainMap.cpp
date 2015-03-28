@@ -37,6 +37,7 @@ int TerrainMap::getCost(const char x, const int y){
 
 int TerrainMap::getCost(const int x, const int y) {
 	char value = map[x][y];
+	std::cout << "Value: " << value << std::endl;
 	std::map<char, int>::iterator it = costing.find(value);
 	if (it != costing.end()){
 		return it->second;
@@ -57,7 +58,7 @@ void TerrainMap::terrainFromFile(const std::string filename){
 		std::getline(file, str);
 		int step = 0;
 		for (std::string::size_type j = 0; j < str.size(); j += 2) {
-			map[i][step] = str[j];
+			map[step][i] = str[j];
 			step++;
 		}
 	}
@@ -68,5 +69,5 @@ void TerrainMap::setCostings(){
 	costing.insert(std::make_pair('L', 1));
 	costing.insert(std::make_pair('H', 2));
 	costing.insert(std::make_pair('F', 3));
-	costing.insert(std::make_pair('M', 0));
+	costing.insert(std::make_pair('M', -1));
 }

@@ -3,6 +3,7 @@
 #include "TerrainMap.h"
 #include <iostream>
 #include <set>
+#include <list>
 
 class TriGrid
 {
@@ -11,6 +12,7 @@ public:
 	~TriGrid();
 
 	void FindShortestPath(char startNodeXLetter, int startNodeY, char goalNodeXLetter, int goalNodeY);
+	TriNode nodes[21][8];
 
 private:
 	
@@ -19,11 +21,10 @@ private:
 	const int XLENGTH = 21;
 	const int YLENGTH = 8;
 
-	TriNode nodes[21][8];
 
 	TerrainMap* terrainMap;
 
 	std::multiset<TriNode*> openList;
-	std::multiset<TriNode*> closedList;
+	std::list<TriNode*> closedList;
 };
 
