@@ -4,13 +4,11 @@
 TerrainMap::TerrainMap(){
 	terrainFromFile();
 	setCostings();
-	printMap();
 }
 
 TerrainMap::TerrainMap(std::string filename){
 	terrainFromFile(filename);
 	setCostings();
-	printMap();
 }
 
 
@@ -19,9 +17,11 @@ TerrainMap::~TerrainMap()
 }
 
 void TerrainMap::printMap() const {
-	for (int i = 0; i < YLENGTH; ++i){
-		for (int j = 0; j < XLENGTH; ++j){
-			std::cout << map[i][j] << " ";
+	std::cout << "  a b c d e f g h i j k l m n o p q r s t u" << std::endl;
+	for (int y = 0; y < YLENGTH; ++y){
+		std::cout << y << " ";
+		for (int x = 0; x < XLENGTH; ++x){
+			std::cout << map[x][y] << " ";
 		}
 		std::cout << "\n";
 	}
@@ -37,7 +37,6 @@ int TerrainMap::getCost(const char x, const int y){
 
 int TerrainMap::getCost(const int x, const int y) {
 	char value = map[x][y];
-	std::cout << "Value: " << value << std::endl;
 	std::map<char, int>::iterator it = costing.find(value);
 	if (it != costing.end()){
 		return it->second;

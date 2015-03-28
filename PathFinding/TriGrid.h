@@ -12,6 +12,11 @@ public:
 	~TriGrid();
 
 	void FindShortestPath(char startNodeXLetter, int startNodeY, char goalNodeXLetter, int goalNodeY);
+
+	void changeNodeType(const char x, const int y, const char type);
+	void printTerrainMap();
+
+
 	TriNode nodes[21][8];
 
 private:
