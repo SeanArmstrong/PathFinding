@@ -75,7 +75,8 @@
     <ClCompile Include="TriNode.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="defaultmap.txt" />
+    <Text Include="TerrainMaps\defaultmap.txt" />
+    <Text Include="TerrainMaps\secondmap.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

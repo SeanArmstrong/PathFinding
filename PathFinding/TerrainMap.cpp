@@ -19,7 +19,7 @@ TerrainMap::~TerrainMap()
 void TerrainMap::printMap() const {
 	std::cout << "  a b c d e f g h i j k l m n o p q r s t u" << std::endl;
 	for (int y = 0; y < YLENGTH; ++y){
-		std::cout << y << " ";
+		std::cout << y + 1 << " ";
 		for (int x = 0; x < XLENGTH; ++x){
 			std::cout << map[x][y] << " ";
 		}
@@ -29,6 +29,10 @@ void TerrainMap::printMap() const {
 
 void TerrainMap::updateValue(const char x, const int y, const char newValue){
 	map[(int) tolower(x) - 97][y] = newValue;
+}
+
+void TerrainMap::loadNewMap(const std::string filename){
+	terrainFromFile(filename);
 }
 
 int TerrainMap::getCost(const char x, const int y){

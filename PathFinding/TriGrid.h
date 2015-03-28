@@ -15,6 +15,7 @@ public:
 
 	void changeNodeType(const char x, const int y, const char type);
 	void printTerrainMap();
+	void loadNewTerrainMap(const std::string filename);
 
 
 	TriNode nodes[21][8];

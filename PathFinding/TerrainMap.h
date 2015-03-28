@@ -19,6 +19,9 @@ public:
 	// Update the value of a given triangle
 	void updateValue(const char x, const int y, const char newValue);
 
+	//
+	void loadNewMap(const std::string filename);
+
 	// Get cost of given triangle
 	int getCost(const char x, const int y);
 	int getCost(const int x, const int y);
@@ -31,7 +34,7 @@ private:
 	const int XLENGTH = 21;
 	const int YLENGTH = 8;
 
-	void terrainFromFile(const std::string filename = "defaultmap.txt");
+	void terrainFromFile(const std::string filename = "TerrainMaps/defaultmap.txt");
 	void setCostings();
 		
 	char map[21][8];

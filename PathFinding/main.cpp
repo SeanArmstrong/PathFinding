@@ -10,12 +10,12 @@ int main(){
 	const int XLENGTH = 21;
 
 	TriGrid grid;
-
+	std::string filename = "";
 	bool exit = false;
 	int command;
 	while (!exit){
 		std::cout << "What would you like to do? " << std::endl;
-		std::cout << "1: Run A*\n2: Edit Node\n3: Print Terrain Map\nAnything Else: Quit" << std::endl;
+		std::cout << "1: Run A*\n2: Edit Node\n3: Print Terrain Map\n4: Load New Map\nAnything Else: Quit" << std::endl;
 		command = 0;
 		std::cin >> command;
 		switch (command){
@@ -85,6 +85,19 @@ int main(){
 			std::cout << "\nTerrain Map\n" << std::endl;
 			grid.printTerrainMap();
 			break;
+		case 4:
+			char contin;
+
+			std::cout << "\nMaps should be located in the TerrainMaps Folder\nThe format can be seen in the TerrainMaps/defaultmap.txt file" << std::endl;
+			std::cout << "Would you like to continue (y/n)" << std::endl;
+			std::cin >> contin;
+			if (tolower(contin) == 'y'){
+				std::cout << "Enter file name (excluding folder)" << std::endl;
+				std::cin >> filename;
+				grid.loadNewTerrainMap("TerrainMaps/" + filename);
+			}
+			break;
+
 		default:
 			exit = true;
 			break;

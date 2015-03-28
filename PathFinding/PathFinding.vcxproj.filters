@@ -40,6 +40,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="defaultmap.txt" />
+    <Text Include="TerrainMaps\defaultmap.txt" />
+    <Text Include="TerrainMaps\secondmap.txt" />
   </ItemGroup>
 </Project>

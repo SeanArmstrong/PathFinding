@@ -6,7 +6,7 @@ TriGrid::TriGrid(){
 	generateGrid();
 	for (int y = 0; y < YLENGTH; y++){
 		for (int x = 0; x < XLENGTH; x++){
-			nodes[x][y].setNeighbours(nodes, 21, 8);
+			nodes[x][y].setNeighbours(nodes, XLENGTH, YLENGTH);
 		}
 	}
 }
@@ -23,6 +23,10 @@ void TriGrid::changeNodeType(const char x, const int y, const char type){
 
 void TriGrid::printTerrainMap(){
 	terrainMap->printMap();
+}
+
+void TriGrid::loadNewTerrainMap(const std::string filename){
+	terrainMap->loadNewMap(filename);
 }
 
 void TriGrid::FindShortestPath(char startNodeXLetter, int startNodeY, char goalNodeXLetter, int goalNodeY){
@@ -47,7 +51,7 @@ void TriGrid::FindShortestPath(char startNodeXLetter, int startNodeY, char goalN
 		if (startNode == goalNode){
 			std::cout << "Error: Goal node is same and start node" << std::endl;
 		}
-		else if (goalNode->getCost() < 0){
+		else if (goalNode->getCost() < 0){ // Can you start on one. In theory you are going down. Might be ok?
 			std::cout << "Error: Cannot finish on a mountain" << std::endl;
 
 		}
@@ -69,7 +73,6 @@ void TriGrid::FindShortestPath(char startNodeXLetter, int startNodeY, char goalN
 				closedList.push_front(currentNode);
 
 				if (currentNode == goalNode){
-					std::cout << "YAY" << std::endl;
 					pathFound = true;
 					closedList.push_front(currentNode);
 					break;
@@ -112,7 +115,7 @@ void TriGrid::FindShortestPath(char startNodeXLetter, int startNodeY, char goalN
 			}
 
 			if (pathFound == true){
-				std::cout << "WOO" << std::endl;
+				std::cout << "Path: " << std::endl;
 
 				// Print path
 				TriNode* printingNode = closedList.front();
@@ -124,9 +127,11 @@ void TriGrid::FindShortestPath(char startNodeXLetter, int startNodeY, char goalN
 					std::cout << "Next Node: " << printingNode->getId() << " x: " << printingNode->getX() <<
 						", y: " << printingNode->getY() << std::endl;
 				}
+
+				std::cout << "Path Cost: " << closedList.front()->getF() << std::endl;
 			}
 			else{
-				std::cout << "DOH!" << std::endl;
+				std::cout << "Cannot Find Path" << std::endl;
 			}
 		}
 	}
