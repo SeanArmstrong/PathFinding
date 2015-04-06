@@ -26,8 +26,12 @@ public:
 	int getCost(const char x, const int y);
 	int getCost(const int x, const int y);
 
+	// Get type of triangle
+	char getType(const int x, const int y) const;
+
 	// Access a value using a letter and a number
 	char operator()(const char x, const int y) const;
+	char operator()(const int x, const int y) const;
 
 private: 
 

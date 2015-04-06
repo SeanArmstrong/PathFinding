@@ -17,11 +17,11 @@ TriNode::TriNode(const int x, const int y, const int up, const int down, const i
 	this->id = ID++;
 	this->numberOfConnectedNodes = up + down + left + right;
 	this->hasAParent = false;
+	this->hasADivergeParent = false;
 }
 
 
-TriNode::~TriNode()
-{
+TriNode::~TriNode(){
 }
 
 void TriNode::setG(int g){
@@ -29,7 +29,8 @@ void TriNode::setG(int g){
 }
 
 void TriNode::setH(int goalX, int goalY){
-	this->h = abs(this->x - goalX) + abs(this->y + goalY);
+	this->h = abs(this->x - goalX) + abs(this->y - goalY);
+	//std::cout << "this.x - goalX  + this.y + goalY = " << this->x << " - " << goalX << " + " << this->y << " "
 }
 
 void TriNode::calculateF(){
@@ -62,4 +63,9 @@ void TriNode::setNeighbours(TriNode nodes[][8], const int xsize, const int ysize
 	if (right == 1){
 		connectedObjects.push_back(&(nodes[this->x + 1][this->y]));
 	}
+}
+
+void TriNode::setDivergeParent(TriNode* p){
+	divergeParent = p;
+	hasADivergeParent = true;
 }

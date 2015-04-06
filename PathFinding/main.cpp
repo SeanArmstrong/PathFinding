@@ -13,6 +13,7 @@ int main(){
 	std::string filename = "";
 	bool exit = false;
 	int command;
+	grid.FindShortestPath('p', 7, 't', 7);
 	while (!exit){
 		std::cout << "What would you like to do? " << std::endl;
 		std::cout << "1: Run A*\n2: Edit Node\n3: Print Terrain Map\n4: Load New Map\nAnything Else: Quit" << std::endl;

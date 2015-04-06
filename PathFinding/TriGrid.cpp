@@ -36,16 +36,8 @@ void TriGrid::FindShortestPath(char startNodeXLetter, int startNodeY, char goalN
 	int startNodeX = (int)tolower(startNodeXLetter - 97);
 	int goalNodeX = (int)tolower(goalNodeXLetter - 97);
 
-	for (int y = 0; y < YLENGTH; y++){
-		for (int x = 0; x < XLENGTH; x++){
-			if (nodes[x][y].getX() == startNodeX && nodes[x][y].getY() == startNodeY){
-				startNode = &(nodes[x][y]);
-			}
-			else if (nodes[x][y].getX() == goalNodeX && nodes[x][y].getY() == goalNodeY){
-				goalNode = &(nodes[x][y]);
-			}
-		}
-	}
+	startNode = &(nodes[startNodeX][startNodeY]);
+	goalNode = &(nodes[goalNodeX][goalNodeY]);
 
 	if (goalNode && startNode){
 		if (startNode == goalNode){
@@ -55,7 +47,7 @@ void TriGrid::FindShortestPath(char startNodeXLetter, int startNodeY, char goalN
 			std::cout << "Error: Cannot finish on a mountain" << std::endl;
 
 		}
-		else{
+		else{ // Seperate to AStar method
 			bool pathFound = false;
 			startNode->setG(0);
 			startNode->setH(goalNodeX, goalNodeY);
@@ -67,8 +59,9 @@ void TriGrid::FindShortestPath(char startNodeXLetter, int startNodeY, char goalN
 			std::list<TriNode*>::iterator closedListIt;
 
 			while (openList.size() > 0){
-				std::cout << openList.size() << std::endl;
 				currentNode = *(openList.begin()); // Set current node to lowest f
+				std::cout << "Current Node: " << currentNode->getId() << std::endl;
+
 				openList.erase(openList.begin()); // Pop from openlist
 				closedList.push_front(currentNode);
 
@@ -79,37 +72,111 @@ void TriGrid::FindShortestPath(char startNodeXLetter, int startNodeY, char goalN
 				}
 
 				std::vector<TriNode*> neighbours = currentNode->getNeighbours();
-				std::cout << "Current Node: " << currentNode->getId() << "- number of neighbours" << neighbours.size() << std::endl;
+
 				for (int i = 0; i < neighbours.size(); i++){
-					std::cout << "Current Node: " << currentNode->getId() << "- Neighbour " << i << "  Neighbour ID: " << neighbours[i]->getId() << " Cost: " << neighbours[i]->getCost() << std::endl;
+
+					// For second part
+					// If node is a lake
+					// and current node is a lake
+					// and current node parent is a lake
+					// Then it would be on its third. So 
+					// Need to go to cheapest near node, back to current node
+					// then to neighbour and set path if this is the cheapest
+
 					int newGValue = 0;
 
 					TriNode* comparisonNode = neighbours[i];
+
 					if (comparisonNode){
 						if (comparisonNode->getCost() < 0){ // we have a mountain to climb
-							std::cout << "Can't climb a mountain" << std::endl;
 							continue;
 						}
+						
+						/*** Multiple Lakes ***/
+						/*if (terrainMap->getType(comparisonNode->getX(), comparisonNode->getY()) == 'L'&& // Comp node is lake
+							terrainMap->getType(currentNode->getX(), currentNode->getY()) == 'L' && // Current node is lake
+							(currentNode->hasParent() && terrainMap->getType(currentNode->getParent()->getX(), currentNode->getParent()->getY()))){ // parent is lake
 
-						newGValue = currentNode->getG() + comparisonNode->getCost();
-						comparisonNode->setH(goalNodeX, goalNodeY);
-						comparisonNode->calculateF();
+							if (currentNode->getId() == 162 || currentNode->getId() == 163 || currentNode->getId() == 164 || currentNode->getId() == 165){
+								std::cout << "node in questoN" << std::endl;
+							}
 
-						openListIt = openList.find(comparisonNode);
-						closedListIt = std::find(closedList.begin(), closedList.end(), comparisonNode);
-						if (openListIt != openList.end() || closedListIt != closedList.end()){ // on the open or closed list
-							if (newGValue < comparisonNode->getG()){
+							std::cout << "Multi Lakes" << std::endl;
+							std::vector<TriNode*> diversionNeighbours = comparisonNode->getNeighbours();
+							TriNode* divergingNode = nullptr;
+							int lowestCost = 5;
+
+							// Find lowest cost neighbour
+							for (int d = 0; d < diversionNeighbours.size(); d++){
+								if (diversionNeighbours[d] != currentNode->getParent() && diversionNeighbours[d] != comparisonNode){
+									if (diversionNeighbours[d]->getCost() < lowestCost){
+										divergingNode = diversionNeighbours[d];
+										lowestCost = diversionNeighbours[d]->getCost();
+									}
+								}
+							}
+
+							if (divergingNode){
+								int newDivergeGValue = currentNode->getG() + divergingNode->getCost();
+								int newComparisonNodeGValue = currentNode->getG() + divergingNode->getCost() + currentNode->getCost();
+								comparisonNode->setH(goalNodeX, goalNodeY);
+
+								openListIt = openList.find(comparisonNode);
+								closedListIt = std::find(closedList.begin(), closedList.end(), comparisonNode);
+								if (openListIt != openList.end() || closedListIt != closedList.end()){ // on the open or closed list
+									if (newComparisonNodeGValue < comparisonNode->getG()){ // new best route
+										comparisonNode->setG(newComparisonNodeGValue);
+										comparisonNode->calculateF();
+										comparisonNode->setParent(currentNode);
+										comparisonNode->setDivergeParent(divergingNode);
+
+										divergingNode->setG(newDivergeGValue);
+										divergingNode->calculateF();
+										divergingNode->setDivergeParent(currentNode);
+
+									}
+								}
+								else{
+									comparisonNode->setG(newComparisonNodeGValue);
+									comparisonNode->calculateF();
+									comparisonNode->setParent(currentNode);
+									comparisonNode->setDivergeParent(divergingNode);
+
+									divergingNode->setG(newDivergeGValue);
+									divergingNode->calculateF();
+									divergingNode->setDivergeParent(currentNode);
+
+									openList.insert(comparisonNode);
+								}
+							}
+						}
+						/*** End Multiple Lakes ***/
+						//else{
+							
+							newGValue = currentNode->getG() + comparisonNode->getCost();
+							comparisonNode->setH(goalNodeX, goalNodeY);
+							//comparisonNode->calculateF();
+
+							openListIt = openList.find(comparisonNode);
+							closedListIt = std::find(closedList.begin(), closedList.end(), comparisonNode);
+							if (openListIt != openList.end() || closedListIt != closedList.end()){ // on the open or closed list
+								if (newGValue < comparisonNode->getG()){
+									//currentNode->setHasADivergeParent(false);
+									//comparisonNode->setHasADivergeParent(false);
+									comparisonNode->setG(newGValue);
+									comparisonNode->calculateF();
+									comparisonNode->setParent(currentNode);
+								}
+							}
+							else{
+								//currentNode->setHasADivergeParent(false);
+								//comparisonNode->setHasADivergeParent(false);
 								comparisonNode->setG(newGValue);
 								comparisonNode->calculateF();
 								comparisonNode->setParent(currentNode);
+								openList.insert(comparisonNode);
 							}
-						}
-						else{
-							comparisonNode->setG(newGValue);
-							comparisonNode->calculateF();
-							comparisonNode->setParent(currentNode);
-							openList.insert(comparisonNode);
-						}
+						//}
 					}
 				}
 			}
@@ -120,12 +187,12 @@ void TriGrid::FindShortestPath(char startNodeXLetter, int startNodeY, char goalN
 				// Print path
 				TriNode* printingNode = closedList.front();
 				std::cout << "Goal Node: " << printingNode->getId() << " x: " << printingNode->getX() <<
-					", y: " << printingNode->getY() << std::endl;
+					", y: " << printingNode->getY() << " - Diverges: " << printingNode->hasDivergeParent() << std::endl;
 
 				while (printingNode->hasParent()){
 					printingNode = printingNode->getParent();
 					std::cout << "Next Node: " << printingNode->getId() << " x: " << printingNode->getX() <<
-						", y: " << printingNode->getY() << std::endl;
+						", y: " << printingNode->getY() << " - Diverges: " << printingNode->hasDivergeParent() << std::endl;
 				}
 
 				std::cout << "Path Cost: " << closedList.front()->getF() << std::endl;

@@ -48,9 +48,17 @@ int TerrainMap::getCost(const int x, const int y) {
 	return 0;
 }
 
+char TerrainMap::getType(const int x, const int y) const{
+	return map[x][y];
+}
+
 char TerrainMap::operator()(const char x, const int y) const {
 	std::cout << (int) tolower(x) - 97 << std::endl;
 	return map[(int)x - 97][y-1];
+}
+
+char TerrainMap::operator()(const int x, const int y) const{
+	return map[x][y];
 }
 
 

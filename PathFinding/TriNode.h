@@ -34,6 +34,11 @@ public:
 
 	bool operator<(const TriNode rhs);
 
+	inline bool hasDivergeParent() const { return hasADivergeParent; }
+	inline TriNode* getDivergeParent() const { return divergeParent; }
+	inline void setHasADivergeParent(bool toggle) { hasADivergeParent = toggle; }
+	void setDivergeParent(TriNode* p);
+
 private:
 	static int ID;
 	int id;
@@ -60,5 +65,8 @@ private:
 
 	TriNode* parent;
 	bool hasAParent;
+
+	TriNode* divergeParent;
+	bool hasADivergeParent;
 };
 
