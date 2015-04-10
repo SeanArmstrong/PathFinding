@@ -23,7 +23,6 @@ public:
 	inline int getId() const { return id; }
 	inline bool hasParent() const { return hasAParent; }
 	inline TriNode* getParent() const { return parent; }
-	//inline TriNode* getNeighbours() const { return *connectedObjects; }
 	inline std::vector<TriNode*> getNeighbours() const { return connectedObjects; }
 
 	void setG(int g);
@@ -34,10 +33,18 @@ public:
 
 	bool operator<(const TriNode rhs);
 
-	inline bool hasDivergeParent() const { return hasADivergeParent; }
-	inline TriNode* getDivergeParent() const { return divergeParent; }
-	inline void setHasADivergeParent(bool toggle) { hasADivergeParent = toggle; }
-	void setDivergeParent(TriNode* p);
+	inline bool doesDivergeTo() const { return boolDivergesTo; }
+	inline bool doesDivergeFrom() const { return boolDivergesFrom; }
+	inline TriNode* getDivergeToNode() const { return divergesTo; }
+	inline TriNode* getDivergeFromNode() const { return divergesFrom; }
+
+	void setDivergeToNode(TriNode* p);
+	void setDivergeFromNode(TriNode* p);
+
+	void removeDivergeToNode();
+	void removeDivergeFromNode();
+
+	void reset();
 
 private:
 	static int ID;
@@ -66,7 +73,10 @@ private:
 	TriNode* parent;
 	bool hasAParent;
 
-	TriNode* divergeParent;
-	bool hasADivergeParent;
+	TriNode* divergesFrom;
+	bool boolDivergesFrom;
+
+	TriNode* divergesTo;
+	bool boolDivergesTo;
 };
 

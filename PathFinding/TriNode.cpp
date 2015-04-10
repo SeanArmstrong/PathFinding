@@ -17,7 +17,8 @@ TriNode::TriNode(const int x, const int y, const int up, const int down, const i
 	this->id = ID++;
 	this->numberOfConnectedNodes = up + down + left + right;
 	this->hasAParent = false;
-	this->hasADivergeParent = false;
+	this->boolDivergesFrom = false;
+	this->boolDivergesTo = false;
 }
 
 
@@ -29,7 +30,7 @@ void TriNode::setG(int g){
 }
 
 void TriNode::setH(int goalX, int goalY){
-	//this->h = abs(this->x - goalX) + abs(this->y + goalY);
+	//this->h = abs(this->x - goalX) + abs(this->y + goalY); // Manhat
 	
 	int x1 = goalX;
 	int x2 = this->x;
@@ -97,56 +98,31 @@ void TriNode::setNeighbours(TriNode nodes[][8], const int xsize, const int ysize
 	}
 }
 
-void TriNode::setDivergeParent(TriNode* p){
-	divergeParent = p;
-	hasADivergeParent = true;
+void TriNode::setDivergeToNode(TriNode* p){
+	divergesTo = p;
+	boolDivergesTo = true;
 }
 
+void TriNode::setDivergeFromNode(TriNode* p){
+	divergesFrom = p;
+	boolDivergesFrom = true;
+}
 
-/*
-void TriNode::setH(int goalX, int goalY){
-int xDistance = abs(this->x - goalX);
-int yDistance = abs(this->y - goalY);
-if (xDistance >= yDistance){
-//Manhattan or Zero is goal node
-this->h = xDistance + yDistance;
+void TriNode::removeDivergeToNode(){
+	divergesTo = nullptr;
+	boolDivergesTo = false;
 }
-else { //+ - up down logic may be wrong check boolean
-if (this->y < goalY){ // goal node is above
-if (this->up == 0){ // Can't traverse immediately up
-if (yDistance % 2 == 0){ //yDistance is even
-this->h = 2 * y;
+
+void TriNode::removeDivergeFromNode(){
+	divergesFrom = nullptr;
+	boolDivergesFrom = false;
 }
-else{ //yDistance is odd
-this->h = (2 * y) + 1;
+
+void TriNode::reset(){
+	this->hasAParent = false;
+	this->boolDivergesFrom = false;
+	this->boolDivergesTo = false;
+	this->parent = nullptr;
+	this->divergesFrom = nullptr;
+	this->divergesTo = nullptr;
 }
-}
-else{
-if (yDistance % 2 == 0){ // yDistance is even
-this->h = (2 * y) + 1;
-}
-else{
-this->h = 2 * y; //yDistance is odd
-}
-}
-}
-else{ // goal node is below
-if (this->down == 0){ // Can't traverse immediately down
-if (yDistance % 2 == 0){ // yDistance is even
-this->h = 2 * y;
-}
-else{ // yDistance is odd
-this->h = (2 * y) + 1;
-}
-}
-else{ // Can traverse immediately down
-if (yDistance % 2 == 0){ // yDistance is even
-this->h = (2 * y) + 1;
-}
-else{ // yDistance is odd
-this->h = 2 * y;
-}
-}
-}
-}
-}*/
