@@ -22,6 +22,7 @@ public:
 
 private:
 	
+	void AStar(TriNode* startNode, TriNode* goalNode);
 	void generateGrid();
 
 	const int XLENGTH = 21;
