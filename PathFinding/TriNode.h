@@ -1,6 +1,7 @@
 #pragma once
 #include "TerrainMap.h"
 #include <vector>
+#include <string>
 
 class TriNode
 {
@@ -11,6 +12,10 @@ public:
 
 	inline int getCost(){
 		return terrainMap->getCost(x, y);
+	}
+
+	inline int getType(){
+		return terrainMap->getType(x, y);
 	}
 
 	void setNeighbours(TriNode nodes[][8], const int xsize, const int ysize);

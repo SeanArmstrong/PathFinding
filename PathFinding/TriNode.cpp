@@ -125,4 +125,7 @@ void TriNode::reset(){
 	this->parent = nullptr;
 	this->divergesFrom = nullptr;
 	this->divergesTo = nullptr;
+	this->h = 0;
+	this->g = 0;
+	this->f = 0;
 }

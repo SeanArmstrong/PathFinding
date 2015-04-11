@@ -10,6 +10,7 @@ int main(){
 	const int XLENGTH = 21;
 
 	TriGrid grid;
+
 	std::string filename = "";
 	bool exit = false;
 	int command;
