@@ -178,30 +178,25 @@ TriNode* TriGrid::findLowestCostNeighbour(TriNode* currentNode, TriNode* compari
 void TriGrid::printPath(const TriNode* printingNode) const {
 	std::cout << "Path: " << std::endl;
 	std::cout << "Cost: " << printingNode->getF() << std::endl;
-	std::cout << "Goal Node: " << printingNode->getId() << " (" << char(printingNode->getX() + 97) <<
-		", " << (printingNode->getY() + 1) << ")" << std::endl;
+	std::cout << "Goal Node: " << printingNode << std::endl;
 
 	while (printingNode->hasParent()){
 		printingNode = printingNode->getParent();
-		
-		 // TODO: Tidy up loop and checks
-		if (!printingNode->hasParent()){
+
+		if (!printingNode->hasParent())
 			break;
-		}
+		
 
 		if (printingNode->doesDivergeTo() && printingNode->getDivergeToNode()->getDivergeFromNode() == printingNode){
-			// Then it diverges
-			std::cout << "Next Node: " << printingNode->getId() << " (" << char(printingNode->getX() + 97) <<
-				", " << (printingNode->getY() + 1) << ") - Diverges via: " << printingNode->getDivergeToNode()->getId() << std::endl;
+			std::cout << "Next Node: " << printingNode << " - Diverges via: " << printingNode->getDivergeToNode() << std::endl;
 		}
 		else{
-			std::cout << "Next Node: " << printingNode->getId() << " (" << char(printingNode->getX() + 97) <<
-				", " << (printingNode->getY() + 1) << ")" <<  std::endl;
+			std::cout << "Next Node: " << printingNode << std::endl;
 		}
+
 	}
 
-	std::cout << "Start Node: " << printingNode->getId() << " (" << char(printingNode->getX() + 97) <<
-		", " << (printingNode->getY() + 1) << ")" << std::endl;
+	std::cout << "Start Node: " << printingNode << std::endl;
 }
 
 

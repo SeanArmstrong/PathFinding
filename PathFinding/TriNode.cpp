@@ -129,3 +129,8 @@ void TriNode::reset(){
 	this->g = 0;
 	this->f = 0;
 }
+
+std::ostream& operator<<(std::ostream& outStream, const TriNode* node){
+	outStream << node->getId() << " - (" << ((char)(node->getX() + 97)) << ", " << (node->getY() + 1) << ")";
+	return outStream;
+}

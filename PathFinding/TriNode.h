@@ -2,6 +2,7 @@
 #include "TerrainMap.h"
 #include <vector>
 #include <string>
+#include <iostream>
 
 class TriNode
 {
@@ -85,3 +86,4 @@ private:
 	bool boolDivergesTo;
 };
 
+std::ostream& operator<<(std::ostream& outStream, const TriNode* node);

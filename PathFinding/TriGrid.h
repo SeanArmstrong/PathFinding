@@ -41,4 +41,3 @@ private:
 	std::multiset<TriNode*> openList;
 	std::list<TriNode*> closedList;
 };
-

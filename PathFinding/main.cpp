@@ -10,7 +10,7 @@ int main(){
 	const int XLENGTH = 21;
 
 	TriGrid grid;
-
+	grid.FindShortestPath('a', 1, 'b', 1);
 	std::string filename = "";
 	bool exit = false;
 	int command;
