@@ -82,7 +82,6 @@ void TriGrid::AStar(TriNode* startNode, TriNode* goalNode){
 	std::list<TriNode*>::iterator closedListIt;
 
 	while (openList.size() > 0){
-		//printOpenList();
 		currentNode = *(openList.begin()); // Set current node to lowest f
 
 		openList.erase(openList.begin()); // Pop from openlist
@@ -106,17 +105,19 @@ void TriGrid::AStar(TriNode* startNode, TriNode* goalNode){
 
 				newGValue = currentNode->getG() + comparisonNode->getCost();
 
-				/*** Multiple Lakes ***/
+				// Multiple lakes
 				if ((comparisonNode->getType() == 'L'&& currentNode->getType() == 'L' &&  // Comp and Curren Node are lakes
 					(currentNode->hasParent() && currentNode->getParent()->getType() == 'L')) && // current node parent is lake
 					comparisonNode != currentNode->getParent()){ // Not backtracking
 
 					// Find another neighbour which is not a lake or a mountain
 					divergingNode = findLowestCostNeighbour(currentNode, comparisonNode);
-					if (!divergingNode){ // can't find appropriate neighbour
-						continue; // No route to diverge to
+					if (!divergingNode){
+						// No route to diverge to
+						continue;
 					}
-					newGValue += divergingNode->getCost() + currentNode->getCost(); // Increase new g value to count diverge
+					// Increase new g value to count diverge
+					newGValue += divergingNode->getCost() + currentNode->getCost();
 				}
 
 				// compNode H value
@@ -124,19 +125,25 @@ void TriGrid::AStar(TriNode* startNode, TriNode* goalNode){
 
 				openListIt = openList.find(comparisonNode);
 				closedListIt = std::find(closedList.begin(), closedList.end(), comparisonNode);
-				if (openListIt != openList.end() || closedListIt != closedList.end()){ // on the open or closed list
+				
+				// If on the open and closed list
+				if (openListIt != openList.end() || closedListIt != closedList.end()){
+					// If better route (less cost)
 					if (newGValue <= comparisonNode->getG()){
 						if (openListIt != openList.end()){
+							// Open list must remove update and readd element
 							openListIt = openList.erase(openListIt);
 							UpdateNodes(comparisonNode, currentNode, newGValue, divergingNode);
 							openListIt = openList.insert(openListIt, comparisonNode);
 						}
 						else{
+							// Closed List just updates
 							UpdateNodes(comparisonNode, currentNode, newGValue, divergingNode);
 						}		
 					}
 				}
-				else{ // First path on node
+				else{
+					// First time at node. Update values and add to openList
 					UpdateNodes(comparisonNode, currentNode, newGValue, divergingNode);
 					openList.insert(comparisonNode);
 				}
@@ -146,6 +153,9 @@ void TriGrid::AStar(TriNode* startNode, TriNode* goalNode){
 
 	if (pathFound == true){
 		printPath(closedList.front());
+	}
+	else{
+		std::cout << "No Path Found\n" << std::endl;
 	}
 }
 
@@ -168,9 +178,8 @@ void TriGrid::SetDivergeForNodes(TriNode* currentNode, TriNode* divergingNode){
 TriNode* TriGrid::findLowestCostNeighbour(TriNode* currentNode, TriNode* comparisonNode){
 	std::vector<TriNode*> diversionNeighbours = currentNode->getNeighbours();
 	TriNode* divergingNode = nullptr;
-	int lowestCost = 10;
+	int lowestCost = 100;
 
-	// Find lowest cost neighbour
 	for (int d = 0; d < diversionNeighbours.size(); d++){
 		if (diversionNeighbours[d] != currentNode->getParent() && diversionNeighbours[d] != comparisonNode){
 			if (diversionNeighbours[d]->getType() != 'L' && diversionNeighbours[d]->getType() != 'M' && 
@@ -219,7 +228,7 @@ void TriGrid::generateGrid(){
 				left = 0;
 			}
 
-			if (x == 20){ // right element
+			if (x == XLENGTH - 1){ // right element
 				right = 0;
 			}
 
@@ -251,7 +260,7 @@ void TriGrid::generateGrid(){
 			if (y == 0){ // top row
 				up = 0;
 			}
-			else if (y == 7){ // bottom row
+			else if (y == YLENGTH - 1){ // bottom row
 				down = 0;
 			}
 

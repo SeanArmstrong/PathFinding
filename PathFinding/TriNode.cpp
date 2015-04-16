@@ -50,8 +50,7 @@ void TriNode::setH(int goalX, int goalY){
 	int yDistance = y2 - y1;
 
 	if (xDistance >= yDistance){
-		//Manhattan
-		this->h = xDistance + yDistance;
+		this->h = xDistance + yDistance; // Manhat
 	}
 	else { 
 		if (((x1 + y1) % 2 == 0) && ((x2 + y2) % 2 == 1)){
