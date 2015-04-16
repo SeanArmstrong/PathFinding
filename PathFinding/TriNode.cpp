@@ -30,7 +30,7 @@ void TriNode::setG(int g){
 }
 
 void TriNode::setH(int goalX, int goalY){
-	//this->h = abs(this->x - goalX) + abs(this->y + goalY); // Manhat
+	//this->h = abs(goalX - this->x) + abs(goalY - this->y); // Manhat
 	
 	int x1 = goalX;
 	int x2 = this->x;
@@ -75,8 +75,9 @@ void TriNode::setParent(TriNode* p){
 	this->hasAParent = true;
 }
 
-bool TriNode::operator<(const TriNode rhs){
-	return (this->f < rhs.f);
+bool TriNode::operator<(const TriNode* rhs){
+	std::cout << "operator" << std::endl;
+	return (this->f < rhs->f);
 }
 
 void TriNode::setNeighbours(TriNode nodes[][8], const int xsize, const int ysize){
@@ -131,6 +132,6 @@ void TriNode::reset(){
 }
 
 std::ostream& operator<<(std::ostream& outStream, const TriNode* node){
-	outStream << node->getId() << " - (" << ((char)(node->getX() + 97)) << ", " << (node->getY() + 1) << ")";
+	outStream << node->getId() << " - (" << ((char)(node->getX() + 97)) << ", " << (node->getY() + 1) << ")Cost : " << node->getG();
 	return outStream;
 }

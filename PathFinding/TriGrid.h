@@ -8,6 +8,12 @@
 class TriGrid
 {
 public:
+	struct compare {
+		bool operator()(TriNode* lhs, TriNode* rhs) const {
+			return lhs->getF() < rhs->getF();
+		}
+	};
+
 	TriGrid();
 	~TriGrid();
 
@@ -22,6 +28,17 @@ public:
 
 private:
 	
+	void printOpenList(){
+		std::cout << "OPEN LIST: " << std::endl;
+		for (std::multiset<TriNode*>::const_iterator i(openList.begin()), end(openList.end());
+			i != end;
+			++i){
+			std::cout << "ID: " << (*i)->getId() << " Cost: " << (*i)->getF() << std::endl;
+		}
+		std::cout << std::endl;
+
+	}
+
 	void AStar(TriNode* startNode, TriNode* goalNode);
 
 	void printPath(const TriNode* printingNode) const;
@@ -38,6 +55,6 @@ private:
 
 	TerrainMap* terrainMap;
 
-	std::multiset<TriNode*> openList;
+	std::multiset<TriNode*, compare> openList;
 	std::list<TriNode*> closedList;
 };

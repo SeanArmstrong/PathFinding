@@ -37,7 +37,7 @@ public:
 
 	void setParent(TriNode* p);
 
-	bool operator<(const TriNode rhs);
+	bool operator<(const TriNode* rhs);
 
 	inline bool doesDivergeTo() const { return boolDivergesTo; }
 	inline bool doesDivergeFrom() const { return boolDivergesFrom; }

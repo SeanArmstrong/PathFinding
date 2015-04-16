@@ -82,6 +82,7 @@ void TriGrid::AStar(TriNode* startNode, TriNode* goalNode){
 	std::list<TriNode*>::iterator closedListIt;
 
 	while (openList.size() > 0){
+		//printOpenList();
 		currentNode = *(openList.begin()); // Set current node to lowest f
 
 		openList.erase(openList.begin()); // Pop from openlist
@@ -124,8 +125,15 @@ void TriGrid::AStar(TriNode* startNode, TriNode* goalNode){
 				openListIt = openList.find(comparisonNode);
 				closedListIt = std::find(closedList.begin(), closedList.end(), comparisonNode);
 				if (openListIt != openList.end() || closedListIt != closedList.end()){ // on the open or closed list
-					if (newGValue < comparisonNode->getG()){ // Better path
-						UpdateNodes(comparisonNode, currentNode, newGValue, divergingNode);
+					if (newGValue <= comparisonNode->getG()){
+						if (openListIt != openList.end()){
+							openListIt = openList.erase(openListIt);
+							UpdateNodes(comparisonNode, currentNode, newGValue, divergingNode);
+							openListIt = openList.insert(openListIt, comparisonNode);
+						}
+						else{
+							UpdateNodes(comparisonNode, currentNode, newGValue, divergingNode);
+						}		
 					}
 				}
 				else{ // First path on node
@@ -177,7 +185,8 @@ TriNode* TriGrid::findLowestCostNeighbour(TriNode* currentNode, TriNode* compari
 
 void TriGrid::printPath(const TriNode* printingNode) const {
 	std::cout << "Path: " << std::endl;
-	std::cout << "Cost: " << printingNode->getF() << std::endl;
+	std::cout << "H Value" << printingNode->getH() << std::endl;
+	std::cout << "Cost: " << printingNode->getG() << std::endl;
 	std::cout << "Goal Node: " << printingNode << std::endl;
 
 	while (printingNode->hasParent()){
@@ -186,16 +195,13 @@ void TriGrid::printPath(const TriNode* printingNode) const {
 		if (!printingNode->hasParent())
 			break;
 		
-
 		if (printingNode->doesDivergeTo() && printingNode->getDivergeToNode()->getDivergeFromNode() == printingNode){
 			std::cout << "Next Node: " << printingNode << " - Diverges via: " << printingNode->getDivergeToNode() << std::endl;
 		}
 		else{
 			std::cout << "Next Node: " << printingNode << std::endl;
 		}
-
 	}
-
 	std::cout << "Start Node: " << printingNode << std::endl;
 }
 
@@ -253,3 +259,4 @@ void TriGrid::generateGrid(){
 		}
 	}
 }
+
