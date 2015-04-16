@@ -6,7 +6,7 @@ TriGrid::TriGrid(){
 	generateGrid();
 	for (int y = 0; y < YLENGTH; y++){
 		for (int x = 0; x < XLENGTH; x++){
-			nodes[x][y].setNeighbours(nodes, XLENGTH, YLENGTH);
+			nodes[x][y].setNeighbours(nodes);
 		}
 	}
 }
@@ -267,5 +267,15 @@ void TriGrid::generateGrid(){
 			nodes[x][y] = TriNode(x, y, up, down, left, right, terrainMap);
 		}
 	}
+}
+
+void TriGrid::printOpenList(){
+	std::cout << "OPEN LIST: " << std::endl;
+	for (std::multiset<TriNode*>::const_iterator i(openList.begin()), end(openList.end());
+		i != end;
+		++i){
+		std::cout << "ID: " << (*i)->getId() << " Cost: " << (*i)->getF() << std::endl;
+	}
+	std::cout << std::endl;
 }
 

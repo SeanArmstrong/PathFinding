@@ -74,12 +74,7 @@ void TriNode::setParent(TriNode* p){
 	this->hasAParent = true;
 }
 
-bool TriNode::operator<(const TriNode* rhs){
-	std::cout << "operator" << std::endl;
-	return (this->f < rhs->f);
-}
-
-void TriNode::setNeighbours(TriNode nodes[][8], const int xsize, const int ysize){
+void TriNode::setNeighbours(TriNode nodes[][8]){
 
 	if (up == 1){
 		connectedObjects.push_back(&(nodes[this->x][this->y - 1]));
